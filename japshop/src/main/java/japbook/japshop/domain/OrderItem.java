@@ -30,14 +30,14 @@ public class OrderItem {
 	@JoinColumn(name = "order_id")
 	private Order order;
 	
-	private int orderPrce;
+	private int orderPrice;
 	private int count;
 
 	//생성 메소드
 	public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
 		OrderItem orderItem = new OrderItem();
 		orderItem.setItem(item);
-		orderItem.setOrderPrce(orderPrice);
+		orderItem.setOrderPrice(orderPrice);
 		orderItem.setCount(count);
 		
 		item.removeStock(count);
@@ -51,6 +51,6 @@ public class OrderItem {
 	
 	//조회 로직
 	public int getTotalPrice() {
-		return getOrderPrce() * getCount();
+		return getOrderPrice() * getCount();
 	}
 }

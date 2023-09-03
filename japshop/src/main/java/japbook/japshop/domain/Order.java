@@ -44,6 +44,7 @@ public class Order {
 	private Delivery delivery;
 	
 	private LocalDateTime orderDate;
+	private int orderPrice;
 	
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status; // ORDER, CANCEL

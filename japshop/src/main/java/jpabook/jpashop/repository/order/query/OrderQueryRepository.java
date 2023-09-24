@@ -1,6 +1,8 @@
 package jpabook.jpashop.repository.order.query;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Repository;
 
@@ -30,7 +32,35 @@ public class OrderQueryRepository {
         return result;
     }
 
-    /**
+    public List<OrderQueryDto> findAllByDto_optimization() {
+        //루트 조회(toOne 코드를 모두 한번에 조회)
+        List<OrderQueryDto> result = findOrders();
+
+        List<Long> orderIds = result.stream()
+        		.map(o -> o.getOrderId())
+        		.collect(Collectors.toList());
+        
+       Map<Long, List<OrderItemQueryDto>> orderItemMap = findOrderItemMap(orderIds); 
+       
+       result.forEach(o -> o.setOrderItems(orderItemMap.get(o.getOrderId())));
+        
+        return result;
+    }
+    
+   private Map<Long, List<OrderItemQueryDto>> findOrderItemMap(List<Long> orderIds){
+	   List<OrderItemQueryDto> orderItems = em.createQuery(
+               "select new jpabook.jpashop.repository.order.query.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count)" +
+                       " from OrderItem oi" +
+                       " join oi.item i" +
+                       " where oi.order.id in : orderId", OrderItemQueryDto.class)
+               .setParameter("orderId", orderIds)
+               .getResultList();
+       
+       return orderItems.stream()
+   		   .collect(Collectors.groupingBy(OrderItemQueryDto -> OrderItemQueryDto.getOrderId()));
+   }
+
+   /**
      * 1:N 관계(컬렉션)를 제외한 나머지를 한번에 조회
      */
     private List<OrderQueryDto> findOrders() {
@@ -54,6 +84,18 @@ public class OrderQueryRepository {
                 .setParameter("orderId", orderId)
                 .getResultList();
     }
+
+    public List<OrderFlatDto> findAllByDto_flat() {
+        return em.createQuery(
+                "select new jpabook.jpashop.repository.order.query.OrderFlatDto(o.id, m.name, o.orderDate, o.status, d.address, i.name, oi.orderPrice, oi.count)" +
+                        " from Order o" +
+                        " join o.member m" +
+                        " join o.delivery d" +
+                        " join o.orderItems oi" +
+                        " join o.item i", OrderFlatDto.class)
+                .getResultList();
+    }
+
     
 	
 }

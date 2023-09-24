@@ -8,14 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import jakarta.persistence.EntityManager;
-import japbook.japshop.domain.Address;
-import japbook.japshop.domain.Member;
-import japbook.japshop.domain.Order;
-import japbook.japshop.domain.OrderStatus;
-import japbook.japshop.domain.item.Book;
-import japbook.japshop.domain.item.Item;
-import japbook.japshop.exception.NotEnoughStockException;
-import japbook.japshop.repository.OrderRepository;
+import jpabook.jpashop.domain.Address;
+import jpabook.jpashop.domain.Member;
+import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.domain.OrderStatus;
+import jpabook.jpashop.domain.item.Book;
+import jpabook.jpashop.domain.item.Item;
+import jpabook.jpashop.exception.NotEnoughStockException;
+import jpabook.jpashop.repository.OrderRepository;
+import jpabook.jpashop.service.OrderService;
 
 @SpringBootTest
 @Transactional
